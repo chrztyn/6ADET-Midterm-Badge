@@ -109,94 +109,182 @@ class _BmiCheckerModuleState extends State<BmiCheckerModule> {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: Colors.grey.shade100),
-            child: Column(
-              children: [
-                const Text("Body Mass Index Calculator", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-                const SizedBox(height: 12),
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: _hController,
-                        keyboardType: TextInputType.text,
-                        decoration: const InputDecoration(
-                          labelText: "Height",
-                          border: OutlineInputBorder(),
-                          hintText: "Ex: 170 or 5'7",
+          Column(
+          children: [
+            Text(
+              "BMI Calculator",
+              textAlign: TextAlign.center,
+              style: Theme.of(context)
+                  .textTheme
+                  .headlineSmall
+                  ?.copyWith(fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              "Know your body mass index instantly",
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+          ],
+        ),
+        const SizedBox(height: 24),
+          Card(
+            elevation: 0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+
+                  Row(
+                    children: [
+                      Expanded(
+                        flex: 3,
+                        child: TextField(
+                          controller: _hController,
+                          keyboardType: TextInputType.text,
+                          decoration: const InputDecoration(
+                            labelText: "Height",
+                            hintText: "170 or 5'7",
+                            border: OutlineInputBorder(),
+                          ),
                         ),
                       ),
-                    ),
-                    const SizedBox(width: 10),
-                    DropdownButton<String>(
-                      value: _heightUnit,
-                      items: const [
-                        DropdownMenuItem(value: "cm", child: Text("cm")),
-                        DropdownMenuItem(value: "feet", child: Text("feet")),
-                      ],
-                      onChanged: (value) {
-                        setState(() {
-                          _heightUnit = value!;
-                        });
-                      },
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: _wController,
-                        keyboardType: TextInputType.number,
-                        decoration: const InputDecoration(
-                          labelText: "Weight",
-                          border: OutlineInputBorder(),
-                          hintText: "Ex: 70 or 154",
+                      const SizedBox(width: 12),
+                      Expanded(
+                        flex: 2,
+                        child: DropdownButtonFormField<String>(
+                          value: _heightUnit,
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                          ),
+                          items: const [
+                            DropdownMenuItem(value: "cm", child: Text("cm")),
+                            DropdownMenuItem(value: "feet", child: Text("feet")),
+                          ],
+                          onChanged: (value) {
+                            setState(() {
+                              _heightUnit = value!;
+                            });
+                          },
                         ),
                       ),
-                    ),
-                    const SizedBox(width: 10),
-                    DropdownButton<String>(
-                      value: _weightUnit,
-                      items: const [
-                        DropdownMenuItem(value: "kg", child: Text("kg")),
-                        DropdownMenuItem(value: "lbs", child: Text("lbs")),
-                      ],
-                      onChanged: (value) {
-                        setState(() {
-                          _weightUnit = value!;
-                        });
-                      },
-                    ),
-                  ],
-                ),
-              ],
+                    ],
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  Row(
+                    children: [
+                      Expanded(
+                        flex: 3,
+                        child: TextField(
+                          controller: _wController,
+                          keyboardType: TextInputType.number,
+                          decoration: const InputDecoration(
+                            labelText: "Weight",
+                            hintText: "70 or 154",
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        flex: 2,
+                        child: DropdownButtonFormField<String>(
+                          value: _weightUnit,
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                          ),
+                          items: const [
+                            DropdownMenuItem(value: "kg", child: Text("kg")),
+                            DropdownMenuItem(value: "lbs", child: Text("lbs")),
+                          ],
+                          onChanged: (value) {
+                            setState(() {
+                              _weightUnit = value!;
+                            });
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
+
           const SizedBox(height: 20),
-          FilledButton(onPressed: _calculate, child: const Text("Calculate")),
+
+          FilledButton(
+            onPressed: _calculate,
+            child: const Text("Calculate BMI"),
+          ),
           const SizedBox(height: 8),
-          TextButton(onPressed: _reset, child: const Text("Clear")),
-          const SizedBox(height: 20),
-          Text(
-            _computedValue == 0 ? "Result: -" : "Result: ${_computedValue.toStringAsFixed(2)}",
-            style: const TextStyle(fontSize: 18),
+          TextButton(
+            onPressed: _reset,
+            child: const Text("Clear All"),
           ),
-          Text(
-            _statusText.isEmpty ? "Category: -" : "Category: $_statusText",
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          ),
+
           const SizedBox(height: 20),
-          const Text("Previous Results", style: TextStyle(fontWeight: FontWeight.bold)),
+
+          Card(
+            elevation: 0,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 28),
+              child: Column(
+                children: [
+                  Text("Your BMI",
+                      style: Theme.of(context).textTheme.bodySmall),
+                  const SizedBox(height: 6),
+                  Text(
+                    _computedValue == 0
+                        ? "—"
+                        : _computedValue.toStringAsFixed(2),
+                    style: Theme.of(context)
+                        .textTheme
+                        .displaySmall
+                        ?.copyWith(fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    _statusText.isEmpty ? "Health Status" : _statusText,
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          const SizedBox(height: 20),
+
+          Text(
+            "Previous Results",
+            style: Theme.of(context)
+                .textTheme
+                .titleSmall
+                ?.copyWith(fontWeight: FontWeight.w600),
+          ),
+          const SizedBox(height: 8),
+
           Expanded(
-            child: ListView.builder(
+            child: ListView.separated(
               itemCount: _records.length,
+              separatorBuilder: (_, __) => const SizedBox(height: 6),
               itemBuilder: (context, index) {
-                return ListTile(leading: const Icon(Icons.check_circle_outline), title: Text(_records[index]));
+                return ListTile(
+                  leading: const Icon(Icons.check_circle_outline),
+                  title: Text(_records[index]),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                );
               },
             ),
           ),

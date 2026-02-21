@@ -50,13 +50,62 @@ class _WaterIntakeTrackerModuleState extends State<WaterIntakeTrackerModule> {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          Column(
+            children: [
+              Text(
+                "Water Intake",
+                textAlign: TextAlign.center,
+                style: Theme.of(context)
+                    .textTheme
+                    .headlineSmall
+                    ?.copyWith(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                "Track your hydration today",
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 24),
+
           Card(
+            elevation: 0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
             child: Padding(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(20),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Text("Daily Goal: ${_goal.toInt()} ml", style: const TextStyle(fontSize: 16)),
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Daily Goal",
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleSmall
+                            ?.copyWith(fontWeight: FontWeight.w600),
+                      ),
+                      Text(
+                        "${_goal.toInt()} ml",
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleMedium
+                            ?.copyWith(fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 12),
+
                   Slider(
                     value: _goal,
                     min: 1000.0,
@@ -69,28 +118,80 @@ class _WaterIntakeTrackerModuleState extends State<WaterIntakeTrackerModule> {
                       });
                     },
                   ),
+
+                  const SizedBox(height: 20),
+
+                  Text(
+                    "Today's Intake",
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    "${_current.toInt()} ml",
+                    style: Theme.of(context)
+                        .textTheme
+                        .headlineMedium
+                        ?.copyWith(fontWeight: FontWeight.bold),
+                  ),
+
+                  const SizedBox(height: 12),
+
+                  LinearProgressIndicator(
+                    value: progress.clamp(0.0, 1.0),
+                    minHeight: 16,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+
+                  const SizedBox(height: 8),
+
+                  Text(
+                    "${(progress * 100).clamp(0, 100).toInt()}% of daily goal",
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
                 ],
               ),
             ),
           ),
-          const SizedBox(height: 20),
-          Text("Current Intake: ${_current.toInt()} ml", style: const TextStyle(fontSize: 18)),
-          const SizedBox(height: 10),
-          LinearProgressIndicator(value: progress.clamp(0.0, 1.0), minHeight: 20),
-          const SizedBox(height: 20),
-          FilledButton.icon(onPressed: _addCup, icon: const Icon(Icons.add), label: const Text("Add 250 ml")),
-          const SizedBox(height: 10),
-          TextButton(onPressed: _reset, child: const Text("Reset")),
-          const SizedBox(height: 20),
-          const Text("History", style: TextStyle(fontWeight: FontWeight.bold)),
+
+          const SizedBox(height: 24),
+
+          FilledButton.icon(
+            onPressed: _addCup,
+            icon: const Icon(Icons.add),
+            label: const Text("Add 250 ml"),
+          ),
+          const SizedBox(height: 8),
+          Align(
+            alignment: Alignment.center,
+            child: TextButton(
+              onPressed: _reset,
+              child: const Text("Reset"),
+            ),
+          ),
+
+          const SizedBox(height: 24),
+
+          Text(
+            "History",
+            style: Theme.of(context)
+                .textTheme
+                .titleSmall
+                ?.copyWith(fontWeight: FontWeight.w600),
+          ),
+          const SizedBox(height: 8),
+
           Expanded(
-            child: ListView.builder(
+            child: ListView.separated(
               itemCount: _history.length,
+              separatorBuilder: (_, __) => const SizedBox(height: 6),
               itemBuilder: (context, index) {
                 return ListTile(
-                  leading: const Icon(Icons.local_drink),
+                  leading: const Icon(Icons.local_drink_outlined),
                   title: Text("Cup ${index + 1}"),
                   subtitle: Text("${_history[index].toInt()} ml"),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14),
+                  ),
                 );
               },
             ),
