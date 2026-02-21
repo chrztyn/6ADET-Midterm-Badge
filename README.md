@@ -114,7 +114,7 @@ flutter doctor
 
 2. Navigate to the project folder:
 ```bash
-cd mini_jira_board
+cd midterm_badge
 ```
 3. Install dependencies:
 ```bash
