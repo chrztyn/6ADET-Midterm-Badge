@@ -25,7 +25,7 @@
 
 ## Modules
 **1. Water Intake Tracker**
-***Features Implemented***
+**About:** Helps users track their daily water consumption.  
 - Adjustable daily goal using **Slider**  
 - Add 250ml per tap  
 - Prevents exceeding goal  
@@ -35,7 +35,7 @@
 - Reset functionality
 
 **2. BMI Checker**
-  ***Features Implemented***
+**About:** Calculates Body Mass Index and determines health category.  
 - Height input (cm or feet format like 5'7)  
 - Weight input (kg or lbs)  
 - Dropdown for unit selection  
@@ -50,7 +50,7 @@
 - Clear/reset function
 
 **3. Grade Calculator**
-  ***Features Implemented***
+**About:** Computes the final grade based on multiple weighted components.  
 - Dynamic component list (Add Component button)  
 - Input fields for:  
 	- Component name  
