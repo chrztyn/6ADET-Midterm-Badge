@@ -28,12 +28,17 @@ class _WaterIntakeTrackerModuleState extends State<WaterIntakeTrackerModule> {
     if (_current + 250.0 > _goal) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Goal already reached!")));
       return;
-    }
+    } 
 
     setState(() {
       _current += 250.0;
       _history.add(250.0);
     });
+    if (_current >= _goal) {
+    ScaffoldMessenger.of(context).showSnackBar(
+    const SnackBar(content: Text("Congratulations! You've reached your daily water goal.")),
+    );
+    }
   }
 
   void _reset() {

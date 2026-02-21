@@ -18,7 +18,6 @@ class BmiCheckerModule extends StatefulWidget implements ToolModule {
   Widget buildBody(BuildContext context) => this;
 }
 
-// === ENCAPSULATION ===
 class _BmiCheckerModuleState extends State<BmiCheckerModule> {
   final TextEditingController _hController = TextEditingController();
   final TextEditingController _wController = TextEditingController();
@@ -32,34 +31,43 @@ class _BmiCheckerModuleState extends State<BmiCheckerModule> {
 
   void _calculate() {
     if (_hController.text.trim().isEmpty || _wController.text.trim().isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Please fill in all fields.")));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please fill in all fields.")),
+      );
       return;
     }
-    // cm input height
+
     double heightMeters;
+
     if (_heightUnit == "cm") {
+      // CM input
       double? cm = double.tryParse(_hController.text.trim());
       if (cm == null || cm <= 0) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Invalid height in cm.")));
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Invalid height in cm.")),
+        );
         return;
       }
       heightMeters = cm / 100;
     } else {
-      // feet input height
+      // Feet input
       String raw = _hController.text.trim();
-      double feet = 0;
-      double inches = 0;
+      List<String> parts = raw.split("'");
 
-      if (raw.contains("'")) {
-        List<String> parts = raw.split("'");
-        feet = double.tryParse(parts[0].trim()) ?? -1;
-        inches = parts.length > 1 ? double.tryParse(parts[1].trim()) ?? 0 : 0;
-      } else {
-        feet = double.tryParse(raw) ?? -1;
+      if (parts.length != 2) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Invalid height in feet (e.g., 5'7)")),
+        );
+        return;
       }
 
-      if (feet <= 0) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Invalid height in feet.")));
+      double? feet = double.tryParse(parts[0].trim());
+      double? inches = double.tryParse(parts[1].trim());
+
+      if (feet == null || inches == null || feet <= 0 || inches < 0 || inches >= 12) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Invalid feet or inches value.")),
+        );
         return;
       }
 
@@ -68,7 +76,9 @@ class _BmiCheckerModuleState extends State<BmiCheckerModule> {
 
     double? weightInput = double.tryParse(_wController.text.trim());
     if (weightInput == null || weightInput <= 0) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Invalid weight.")));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Invalid weight.")),
+      );
       return;
     }
 
@@ -112,35 +122,32 @@ class _BmiCheckerModuleState extends State<BmiCheckerModule> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Column(
-          children: [
-            Text(
-              "BMI Calculator",
-              textAlign: TextAlign.center,
-              style: Theme.of(context)
-                  .textTheme
-                  .headlineSmall
-                  ?.copyWith(fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              "Know your body mass index instantly",
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodySmall,
-            ),
-          ],
-        ),
-        const SizedBox(height: 24),
+            children: [
+              Text(
+                "BMI Calculator",
+                textAlign: TextAlign.center,
+                style: Theme.of(context)
+                    .textTheme
+                    .headlineSmall
+                    ?.copyWith(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                "Know your body mass index instantly",
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+            ],
+          ),
+          const SizedBox(height: 24),
+
           Card(
             elevation: 0,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
-            ),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
             child: Padding(
               padding: const EdgeInsets.all(20),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-
                   Row(
                     children: [
                       Expanded(
@@ -160,25 +167,17 @@ class _BmiCheckerModuleState extends State<BmiCheckerModule> {
                         flex: 2,
                         child: DropdownButtonFormField<String>(
                           value: _heightUnit,
-                          decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
-                          ),
+                          decoration: const InputDecoration(border: OutlineInputBorder()),
                           items: const [
                             DropdownMenuItem(value: "cm", child: Text("cm")),
                             DropdownMenuItem(value: "feet", child: Text("feet")),
                           ],
-                          onChanged: (value) {
-                            setState(() {
-                              _heightUnit = value!;
-                            });
-                          },
+                          onChanged: (value) => setState(() => _heightUnit = value!),
                         ),
                       ),
                     ],
                   ),
-
                   const SizedBox(height: 16),
-
                   Row(
                     children: [
                       Expanded(
@@ -198,18 +197,12 @@ class _BmiCheckerModuleState extends State<BmiCheckerModule> {
                         flex: 2,
                         child: DropdownButtonFormField<String>(
                           value: _weightUnit,
-                          decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
-                          ),
+                          decoration: const InputDecoration(border: OutlineInputBorder()),
                           items: const [
                             DropdownMenuItem(value: "kg", child: Text("kg")),
                             DropdownMenuItem(value: "lbs", child: Text("lbs")),
                           ],
-                          onChanged: (value) {
-                            setState(() {
-                              _weightUnit = value!;
-                            });
-                          },
+                          onChanged: (value) => setState(() => _weightUnit = value!),
                         ),
                       ),
                     ],
@@ -218,19 +211,11 @@ class _BmiCheckerModuleState extends State<BmiCheckerModule> {
               ),
             ),
           ),
-
           const SizedBox(height: 20),
 
-          FilledButton(
-            onPressed: _calculate,
-            child: const Text("Calculate BMI"),
-          ),
+          FilledButton(onPressed: _calculate, child: const Text("Calculate BMI")),
           const SizedBox(height: 8),
-          TextButton(
-            onPressed: _reset,
-            child: const Text("Clear All"),
-          ),
-
+          TextButton(onPressed: _reset, child: const Text("Clear All")),
           const SizedBox(height: 20),
 
           Card(
@@ -240,17 +225,11 @@ class _BmiCheckerModuleState extends State<BmiCheckerModule> {
               padding: const EdgeInsets.symmetric(vertical: 28),
               child: Column(
                 children: [
-                  Text("Your BMI",
-                      style: Theme.of(context).textTheme.bodySmall),
+                  Text("Your BMI", style: Theme.of(context).textTheme.bodySmall),
                   const SizedBox(height: 6),
                   Text(
-                    _computedValue == 0
-                        ? "—"
-                        : _computedValue.toStringAsFixed(2),
-                    style: Theme.of(context)
-                        .textTheme
-                        .displaySmall
-                        ?.copyWith(fontWeight: FontWeight.bold),
+                    _computedValue == 0 ? "—" : _computedValue.toStringAsFixed(2),
+                    style: Theme.of(context).textTheme.displaySmall?.copyWith(fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 6),
                   Text(
@@ -261,31 +240,21 @@ class _BmiCheckerModuleState extends State<BmiCheckerModule> {
               ),
             ),
           ),
-
           const SizedBox(height: 20),
-
           Text(
             "Previous Results",
-            style: Theme.of(context)
-                .textTheme
-                .titleSmall
-                ?.copyWith(fontWeight: FontWeight.w600),
+            style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
           ),
           const SizedBox(height: 8),
-
           Expanded(
             child: ListView.separated(
               itemCount: _records.length,
               separatorBuilder: (_, __) => const SizedBox(height: 6),
-              itemBuilder: (context, index) {
-                return ListTile(
-                  leading: const Icon(Icons.check_circle_outline),
-                  title: Text(_records[index]),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                );
-              },
+              itemBuilder: (context, index) => ListTile(
+                leading: const Icon(Icons.check_circle_outline),
+                title: Text(_records[index]),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              ),
             ),
           ),
         ],
